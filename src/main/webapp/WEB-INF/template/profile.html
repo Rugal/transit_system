@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8"/>
-        <title>Transit System</title>
+        <title>User Profile</title>
         <!--  Static resources form Webjars -->
         <link rel="stylesheet" href="/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
         <script src="/webjars/jquery/4.1.0/jquery.min.js"></script>
@@ -10,11 +10,6 @@
     </head>
     <body>
         <div class="container-fluid" style="margin-top: 20px">
-            <div class="row">
-                <div class="col-md-10 offset-md-1">
-                    User Profile
-                </div>
-            </div>
             <div class="row">
                 <tbody>
                     <tr th:each="student: ${students}">
