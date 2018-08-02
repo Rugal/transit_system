@@ -11,10 +11,7 @@
     <body>
         <div class="container-fluid" style="margin-top: 20px">
             <div class="col-md-10 offset-md-1">
-                <form action="#" th:action="@{/signin}" th:object="${signInUser}" method="post">
-                    <ul th:if="${#fields.hasErrors('*')}">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-                    </ul>
+                <form action="#" th:action="@{/signin}" th:object="${user}" method="post">
                     <div class="form-group">
                         <label for="email">Email address</label>
                         <input th:field="*{email}" type="email" class="form-control" id="email"

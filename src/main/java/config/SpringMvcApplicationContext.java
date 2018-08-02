@@ -117,7 +117,7 @@ public class SpringMvcApplicationContext implements WebMvcConfigurer {
     final ServletContextTemplateResolver tr = new ServletContextTemplateResolver(servletContext);
     tr.setPrefix("/WEB-INF/template/");
     tr.setSuffix(".html");
-    tr.setTemplateMode("HTML5");
+    tr.setTemplateMode("HTML");
     return tr;
   }
 
