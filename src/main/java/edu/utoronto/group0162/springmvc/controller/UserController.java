@@ -1,8 +1,11 @@
 package edu.utoronto.group0162.springmvc.controller;
 
+import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import config.SystemDefaultProperty;
 
 import edu.utoronto.group0162.core.entity.User;
 import edu.utoronto.group0162.core.service.CardService;
@@ -34,16 +37,34 @@ public class UserController {
   @Autowired
   private UserService userService;
 
+  private ModelAndView toProfile(final Integer uid) {
+    final Optional<User> optionalUser = this.userService.getDao().findById(uid);
+    return optionalUser.isPresent()
+           ? this.toProfile(optionalUser.get())
+           : new ModelAndView("error", "error", "User not found");
+  }
+
+  private ModelAndView toProfile(final User user) {
+    final ModelAndView mav = new ModelAndView("profile");
+    mav.addObject("user", user);
+    mav.addObject("cards", this.cardService.getDao().findByUser(user));
+    return mav;
+  }
+
   /**
    * Index.
    *
-   * @param model
+   * @param session HTTP session
    *
    * @return
    */
   @GetMapping(path = {"/", "/signin", "/**"})
-  public ModelAndView signIn() {
-    return new ModelAndView("signin", "user", new SignIn());
+  public ModelAndView signIn(final HttpSession session) {
+    final Integer uid = (Integer) session.getAttribute(SystemDefaultProperty.UID);
+    if (Objects.isNull(uid)) {
+      return new ModelAndView("signin", "user", new SignIn());
+    }
+    return this.toProfile(uid);
   }
 
   /**
@@ -66,10 +87,8 @@ public class UserController {
       mav.addObject("error", "Credential not match");
     } else {
       final User user = optionalUser.get();
-      session.setAttribute("uid", user.getUid());
-      mav = new ModelAndView("profile");
-      mav.addObject("user", user);
-      mav.addObject("cards", this.cardService.getDao().findByUser(user));
+      session.setAttribute(SystemDefaultProperty.UID, user.getUid());
+      mav = this.toProfile(user);
     }
     return mav;
   }
@@ -107,10 +126,8 @@ public class UserController {
       mav.addObject("error", "Email not available");
     } else {
       final User user = this.userService.getDao().save(UserMapper.INSTANCE.fromSignUp(signUpUser));
-      session.setAttribute("uid", user.getUid());
-      mav = new ModelAndView("profile");
-      mav.addObject("user", user);
-      mav.addObject("cards", this.cardService.getDao().findByUser(user));
+      session.setAttribute(SystemDefaultProperty.UID, user.getUid());
+      mav = this.toProfile(user);
     }
     return mav;
   }

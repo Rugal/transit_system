@@ -14,4 +14,6 @@ public interface UserMapper {
   User fromSignIn(SignIn signIn);
 
   User fromSignUp(SignUp signUp);
+
+  SignIn toSignIn(User user);
 }
