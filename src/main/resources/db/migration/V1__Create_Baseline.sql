@@ -22,11 +22,6 @@ SET default_with_oids = false;
 CREATE SCHEMA IF NOT EXISTS transit_system;
 SET search_path TO transit_system;
 
---
--- TOC entry 198 (class 1259 OID 16395)
--- Name: user; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE "user" (
     uid serial PRIMARY KEY,
     name character varying(50),
@@ -38,18 +33,30 @@ CREATE TABLE "user" (
     created_at bigint
 );
 
---
--- TOC entry 200 (class 1259 OID 16403)
--- Name: card; Type: TABLE; Schema: public; Owner: -
---
-
 CREATE TABLE card (
     cid serial PRIMARY KEY,
     uid integer REFERENCES "user" (uid),
-    active boolean,
+    active boolean DEFAULT true,
     balance double precision,
     modified_at bigint,
     created_at bigint
 );
 
 CREATE UNIQUE INDEX unique_user_email ON "user" (email);
+
+CREATE TABLE station (
+    sid serial PRIMARY KEY,
+    name character varying(50),
+    modified_at bigint,
+    created_at bigint
+);
+
+CREATE TABLE edge (
+    eid serial PRIMARY KEY,
+    "start" integer REFERENCES station (sid),
+    "stop" integer REFERENCES station (sid),
+    distance double precision,
+    duration int,
+    modified_at bigint,
+    created_at bigint
+);

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import edu.utoronto.group0162.core.entity.User;
+import edu.utoronto.group0162.core.service.CardService;
 import edu.utoronto.group0162.core.service.UserService;
 import edu.utoronto.group0162.springmvc.dto.user.UserMapper;
 import edu.utoronto.group0162.springmvc.dto.user.request.SignIn;
@@ -28,6 +29,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
 
   @Autowired
+  private CardService cardService;
+
+  @Autowired
   private UserService userService;
 
   /**
@@ -37,7 +41,7 @@ public class UserController {
    *
    * @return
    */
-  @GetMapping(path = {"/", "/signin"})
+  @GetMapping(path = {"/", "/signin", "/**"})
   public ModelAndView signIn() {
     return new ModelAndView("signin", "user", new SignIn());
   }
@@ -65,6 +69,7 @@ public class UserController {
       session.setAttribute("uid", user.getUid());
       mav = new ModelAndView("profile");
       mav.addObject("user", user);
+      mav.addObject("cards", this.cardService.getDao().findByUser(user));
     }
     return mav;
   }
@@ -105,6 +110,7 @@ public class UserController {
       session.setAttribute("uid", user.getUid());
       mav = new ModelAndView("profile");
       mav.addObject("user", user);
+      mav.addObject("cards", this.cardService.getDao().findByUser(user));
     }
     return mav;
   }

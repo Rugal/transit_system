@@ -10,7 +10,13 @@
     </head>
     <body>
         <div class="container-fluid" style="margin-top: 20px">
-            <div th:text='${error}'/>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <div class="alert alert-danger" role="alert" th:text='${error}'/>
+                </div>
+                <div class="col"></div>
+            </div>
         </div>
     </body>
 </html>

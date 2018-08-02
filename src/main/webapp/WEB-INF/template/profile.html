@@ -11,30 +11,74 @@
     <body>
         <div class="container-fluid" style="margin-top: 20px">
             <div class="row">
-                <tbody>
-                    <tr th:each="student: ${students}">
-                        <td th:text="${student.id}" />
-                        <td th:text="${student.name}" />
-                    </tr>
-                </tbody>
+                <div class="col"></div>
+                <div class="col">
+                    <table class="table">
+                        <caption>User Profile</caption>
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td th:text="${user.uid}"/>
+                                <td th:text="${user.name}"/>
+                                <td th:text="${user.email}"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col"></div>
+            </div>
 
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td th:text="${user.uid}"></td>
-                            <td th:text="${user.name}"></td>
-                            <td th:text="${user.email}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped">
+                        <caption>My Card</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Balance</th>
+                                <th scope="col">Create At</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="card : ${cards}">
+                                <form action="#" th:action="@{/card/} + ${card.cid}" th:object="${user}" method="delete">
+                                    <td th:text="${card.cid}"/>
+                                    <td th:text="${card.balance}"/>
+                                    <td th:text="${#dates.format(new java.util.Date(card.createdAt), 'yyyy-MM-dd hh:mm')}"/>
+                                    <td><button type="submit" class="btn btn-danger">Delete</button></td>
+                                </form> 
+                            </tr> 
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col">
+                    <table class="table table-striped">
+                        <caption>My Trip</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">From</th>
+                                <th scope="col">To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td th:text="${user.uid}"/>
+                                <td th:text="${user.name}"/>
+                                <td th:text="${user.email}"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>
