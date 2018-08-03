@@ -17,6 +17,7 @@ import edu.utoronto.group0162.springmvc.dto.user.request.SignUp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -129,6 +130,12 @@ public class UserController {
       mav = new ModelAndView(String.format("redirect:/user/%d", user.getUid()));
     }
     return mav;
+  }
+
+  @DeleteMapping(value = "/signout")
+  public ModelAndView signOut(final HttpSession session) {
+    session.removeAttribute(SystemDefaultProperty.UID);
+    return new ModelAndView("redirect:/signin");
   }
 
   /**

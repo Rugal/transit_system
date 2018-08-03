@@ -9,7 +9,11 @@
                 <div class="col"></div>
                 <div class="col">
                     <table class="table">
-                        <caption>User Profile</caption>
+                        <caption>
+                            <form action="#" th:action="@{/signout}" th:method="delete">
+                                <button type="submit" class="btn btn-warning">Sign Out</button>
+                            </form>
+                        </caption>
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">ID</th>
