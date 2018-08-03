@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import config.SystemDefaultProperty;
 
 import edu.utoronto.group0162.core.entity.User;
+import edu.utoronto.group0162.core.service.CardService;
 import edu.utoronto.group0162.core.service.UserService;
 import edu.utoronto.group0162.springmvc.dto.user.UserMapper;
 import edu.utoronto.group0162.springmvc.dto.user.request.SignIn;
@@ -34,6 +35,23 @@ public class UserController {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private CardService cardService;
+
+  private ModelAndView toProfile(final Integer uid) {
+    final Optional<User> optionalUser = this.userService.getDao().findById(uid);
+    return optionalUser.isPresent()
+           ? this.toProfile(optionalUser.get())
+           : new ModelAndView("error", "error", "User not found");
+  }
+
+  private ModelAndView toProfile(final User user) {
+    final ModelAndView mav = new ModelAndView("profile");
+    mav.addObject("user", user);
+    mav.addObject("cards", this.cardService.getDao().findByUser(user));
+    return mav;
+  }
+
   /**
    * Index.
    *
@@ -47,7 +65,7 @@ public class UserController {
     if (Objects.isNull(uid)) {
       return new ModelAndView("signin", "user", new SignIn());
     }
-    return this.userService.toProfile(uid);
+    return new ModelAndView(String.format("redirect:/user/%d", uid));
   }
 
   /**
@@ -71,7 +89,7 @@ public class UserController {
     } else {
       final User user = optionalUser.get();
       session.setAttribute(SystemDefaultProperty.UID, user.getUid());
-      mav = this.userService.toProfile(user);
+      mav = new ModelAndView(String.format("redirect:/user/%d", user.getUid()));
     }
     return mav;
   }
@@ -108,7 +126,7 @@ public class UserController {
     } else {
       final User user = this.userService.getDao().save(UserMapper.INSTANCE.fromSignUp(signUpUser));
       session.setAttribute(SystemDefaultProperty.UID, user.getUid());
-      mav = this.userService.toProfile(user);
+      mav = new ModelAndView(String.format("redirect:/user/%d", user.getUid()));
     }
     return mav;
   }
@@ -122,6 +140,6 @@ public class UserController {
    */
   @GetMapping(value = "/user/{uid}")
   public ModelAndView profile(final @PathVariable Integer uid) {
-    return this.userService.toProfile(uid);
+    return this.toProfile(uid);
   }
 }

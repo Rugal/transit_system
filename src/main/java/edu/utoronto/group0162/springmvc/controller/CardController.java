@@ -45,7 +45,8 @@ public class CardController {
   public ModelAndView delete(final @PathVariable Integer cid,
                              final HttpSession session) {
     this.cardService.getDao().deleteById(cid);
-    return this.userService.toProfile((Integer) session.getAttribute(SystemDefaultProperty.UID));
+    final Integer uid = (Integer) session.getAttribute(SystemDefaultProperty.UID);
+    return new ModelAndView(String.format("redirect:/user/%d", uid));
   }
 
   /**
@@ -66,6 +67,6 @@ public class CardController {
       card.setUser(optionalUser.get());
       this.cardService.getDao().save(card);
     }
-    return this.userService.toProfile(uid);
+    return new ModelAndView(String.format("redirect:/user/%d", uid));
   }
 }
