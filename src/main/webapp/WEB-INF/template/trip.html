@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="fragment/header :: header(title=~{::title/text()})">
-        <title>Current Trip</title>
+        <title>Something went wrong</title>
     </head>
     <body>
         <div class="container-fluid" style="margin-top: 20px">
             <div class="row">
                 <div class="col"></div>
                 <div class="col">
-                    <div class="alert alert-primary" role="alert" th:text='${error}'/>
+                    <div class="alert alert-danger" role="alert" th:text='${error}'/>
                 </div>
                 <div class="col"></div>
             </div>

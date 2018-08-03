@@ -53,7 +53,7 @@
                         <form action="#" th:action="@{/card/} + ${card.cid}" th:method="delete">
                             <td th:text="${card.cid}"/>
                             <td th:text="${card.balance}"/>
-                            <td th:text="${#dates.format(new java.util.Date(card.createdAt), 'yyyy-MM-dd hh:mm')}"/>
+                            <td th:text="${#dates.format(new java.util.Date(card.createdAt * 1000), 'yyyy-MM-dd hh:mm')}"/>
                             <td><button type="submit" class="btn btn-danger">Delete</button></td>
                         </form> 
                         </tr> 
@@ -62,7 +62,11 @@
                 </div>
                 <div class="col">
                     <table class="table table-striped">
-                        <caption>My Trip</caption>
+                        <caption>
+                            <form action="#" th:action="@{/trip-plan}" method="get">
+                                <button type="submit" class="btn btn-primary">New Trip</button>
+                            </form>
+                        </caption>
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
