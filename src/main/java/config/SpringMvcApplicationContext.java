@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -190,5 +191,10 @@ public class SpringMvcApplicationContext implements WebMvcConfigurer {
     mapping.setUseSuffixPatternMatch(false);
     mapping.setUseTrailingSlashMatch(false);
     return mapping;
+  }
+
+  @Bean
+  public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+    return new HiddenHttpMethodFilter();
   }
 }

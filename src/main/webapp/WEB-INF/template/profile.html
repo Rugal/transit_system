@@ -52,7 +52,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="card : ${cards}">
-                                <form action="#" th:action="@{/card/} + ${card.cid}" th:object="${user}" method="delete">
+                                <form action="#" th:action="@{/card/} + ${card.cid}" th:method="delete">
                                     <td th:text="${card.cid}"/>
                                     <td th:text="${card.balance}"/>
                                     <td th:text="${#dates.format(new java.util.Date(card.createdAt), 'yyyy-MM-dd hh:mm')}"/>
