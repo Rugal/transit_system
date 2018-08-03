@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public ModelAndView toProfile(final User user) {
-    final ModelAndView mav = new ModelAndView("profile");
+    final ModelAndView mav = new ModelAndView(String.format("redirect:/user/%d", user.getUid()));
     mav.addObject("user", user);
     mav.addObject("cards", this.cardService.getDao().findByUser(user));
     return mav;

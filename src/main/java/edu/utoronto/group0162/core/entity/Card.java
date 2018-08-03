@@ -38,13 +38,13 @@ public class Card {
                      sequenceName = SCHEMA + "." + SEQUENCE_NAME)
   private Integer cid;
 
-  private Double balance;
+  private Double balance = 20.0;
 
   @JoinColumn(name = "uid", referencedColumnName = "uid")
   @ManyToOne(cascade = CascadeType.PERSIST)
   private User user;
 
-  private Boolean active;
+  private Boolean active = true;
 
   @Column(name = "created_at")
   private Long createdAt;

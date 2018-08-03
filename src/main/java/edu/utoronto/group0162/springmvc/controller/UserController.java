@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -78,8 +79,6 @@ public class UserController {
   /**
    * Controller for sign up.
    *
-   * @param model
-   *
    * @return
    */
   @GetMapping(value = "/signup")
@@ -112,5 +111,17 @@ public class UserController {
       mav = this.userService.toProfile(user);
     }
     return mav;
+  }
+
+  /**
+   * Controller for user profile.
+   *
+   * @param uid user id
+   *
+   * @return
+   */
+  @GetMapping(value = "/user/{uid}")
+  public ModelAndView profile(final @PathVariable Integer uid) {
+    return this.userService.toProfile(uid);
   }
 }

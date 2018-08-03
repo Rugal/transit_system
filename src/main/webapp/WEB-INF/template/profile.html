@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8"/>
+    <head th:replace="fragment/header :: header(title=~{::title/text()})">
         <title>User Profile</title>
-        <!--  Static resources form Webjars -->
-        <link rel="stylesheet" href="/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-        <script src="/webjars/jquery/4.1.0/jquery.min.js"></script>
-        <script src="/webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     </head>
     <body>
         <div class="container-fluid" style="margin-top: 20px">
@@ -27,7 +22,7 @@
                                 <td th:text="${user.uid}"/>
                                 <td th:text="${user.name}"/>
                                 <td th:text="${user.email}"/>
-                                </tr>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -52,13 +47,13 @@
                         </thead>
                         <tbody>
                             <tr th:each="card : ${cards}">
-                                <form action="#" th:action="@{/card/} + ${card.cid}" th:method="delete">
-                                    <td th:text="${card.cid}"/>
-                                    <td th:text="${card.balance}"/>
-                                    <td th:text="${#dates.format(new java.util.Date(card.createdAt), 'yyyy-MM-dd hh:mm')}"/>
-                                    <td><button type="submit" class="btn btn-danger">Delete</button></td>
-                                </form> 
-                            </tr> 
+                        <form action="#" th:action="@{/card/} + ${card.cid}" th:method="delete">
+                            <td th:text="${card.cid}"/>
+                            <td th:text="${card.balance}"/>
+                            <td th:text="${#dates.format(new java.util.Date(card.createdAt), 'yyyy-MM-dd hh:mm')}"/>
+                            <td><button type="submit" class="btn btn-danger">Delete</button></td>
+                        </form> 
+                        </tr> 
                         </tbody>
                     </table>
                 </div>
