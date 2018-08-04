@@ -4,47 +4,41 @@ import static config.SystemDefaultProperty.SCHEMA;
 
 import java.time.Instant;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
 /**
- * Address entity.
+ * Route entity.
  *
  * @author Rugal Bernstein
  */
 @Data
 @Entity
-@Table(schema = SCHEMA, name = "edge")
-public class Edge {
+@Table(schema = SCHEMA, name = "route")
+public class Route {
 
-  private static final String SEQUENCE_NAME = "edge_eid_seq";
+  private static final String SEQUENCE_NAME = "route_rid_seq";
 
   @Basic(optional = false)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
   @Id
   @SequenceGenerator(name = SEQUENCE_NAME, allocationSize = 1,
                      sequenceName = SCHEMA + "." + SEQUENCE_NAME)
-  private Integer eid;
+  private Integer rid;
 
-  @JoinColumn(name = "start", referencedColumnName = "sid")
-  @ManyToOne(cascade = CascadeType.PERSIST)
-  private Station start;
-
-  @JoinColumn(name = "stop", referencedColumnName = "sid")
-  @ManyToOne(cascade = CascadeType.PERSIST)
-  private Station stop;
+  @Size(max = 50)
+  @Column(length = 50)
+  private String name;
 
   @Column(name = "created_at")
   private Long createdAt;

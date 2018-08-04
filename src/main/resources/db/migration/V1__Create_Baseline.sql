@@ -44,23 +44,24 @@ CREATE TABLE card (
 
 CREATE UNIQUE INDEX unique_user_email ON "user" (email);
 
+CREATE TABLE route (
+    rid serial PRIMARY KEY,
+    name character varying(50),
+    modified_at bigint,
+    created_at bigint
+);
+
 CREATE TABLE station (
     sid serial PRIMARY KEY,
+    point int,
     name character varying(50),
+    rid integer REFERENCES route (rid),
     modified_at bigint,
     created_at bigint
 );
 
 CREATE UNIQUE INDEX unique_station_name ON station (name);
 
-CREATE TABLE edge (
-    eid serial PRIMARY KEY,
-    "start" integer REFERENCES station (sid),
-    "stop" integer REFERENCES station (sid),
-    distance double precision,
-    modified_at bigint,
-    created_at bigint
-);
 
 CREATE TABLE trip (
     tid serial PRIMARY KEY,
