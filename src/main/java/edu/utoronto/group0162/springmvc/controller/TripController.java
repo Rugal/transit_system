@@ -60,7 +60,7 @@ public class TripController {
     final Optional<Trip> optionalTrip = this.tripService.getDao()
       .findByUserAndFinish(user, false);
     final List<Card> cards = this.cardService.getDao().findByUser(user);
-    final Iterable<Station> stations = this.stationService.getDao().findAll();
+    final List<Station> stations = this.stationService.getDao().findAll();
 
     final ModelAndView mav = new ModelAndView("trip");
     mav.addObject("hasUnfinishTrip", optionalTrip.isPresent());

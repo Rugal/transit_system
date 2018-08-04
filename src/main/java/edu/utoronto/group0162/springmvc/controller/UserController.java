@@ -9,6 +9,7 @@ import config.SystemDefaultProperty;
 
 import edu.utoronto.group0162.core.entity.User;
 import edu.utoronto.group0162.core.service.CardService;
+import edu.utoronto.group0162.core.service.TripService;
 import edu.utoronto.group0162.core.service.UserService;
 import edu.utoronto.group0162.springmvc.dto.user.UserMapper;
 import edu.utoronto.group0162.springmvc.dto.user.request.SignIn;
@@ -39,6 +40,9 @@ public class UserController {
   @Autowired
   private CardService cardService;
 
+  @Autowired
+  private TripService tripService;
+
   private ModelAndView toProfile(final Integer uid) {
     final Optional<User> optionalUser = this.userService.getDao().findById(uid);
     return optionalUser.isPresent()
@@ -50,6 +54,7 @@ public class UserController {
     final ModelAndView mav = new ModelAndView("profile");
     mav.addObject("user", user);
     mav.addObject("cards", this.cardService.getDao().findByUser(user));
+    mav.addObject("trips", this.tripService.getDao().findByUser(user));
     return mav;
   }
 

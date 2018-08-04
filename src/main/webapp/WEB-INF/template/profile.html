@@ -50,13 +50,13 @@
                         </thead>
                         <tbody>
                             <tr th:each="card : ${cards}">
-                        <form action="#" th:action="@{/card/} + ${card.cid}" th:method="delete">
-                            <td th:text="${card.cid}"/>
-                            <td th:text="${card.balance}"/>
-                            <td th:text="${#dates.format(new java.util.Date(card.createdAt * 1000), 'yyyy-MM-dd hh:mm')}"/>
-                            <td><button type="submit" class="btn btn-danger">Delete</button></td>
-                        </form> 
-                        </tr> 
+                                <form action="#" th:action="@{/card/} + ${card.cid}" th:method="delete">
+                                    <td th:text="${card.cid}"/>
+                                    <td th:text="${card.balance}"/>
+                                    <td th:text="${#dates.format(new java.util.Date(card.createdAt * 1000), 'yyyy-MM-dd hh:mm')}"/>
+                                    <td><button type="submit" class="btn btn-danger">Delete</button></td>
+                                </form>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -70,16 +70,14 @@
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
-                                <th scope="col">From</th>
-                                <th scope="col">To</th>
+                                <th scope="col">Finish</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td th:text="${user.uid}"/>
-                                <td th:text="${user.name}"/>
-                                <td th:text="${user.email}"/>
-                            </tr>
+                            <tr th:each="trip : ${trips}">
+                                <td th:text="${#dates.format(new java.util.Date(trip.createdAt * 1000), 'yyyy-MM-dd hh:mm')}"/>
+                                <td th:text="${trip.finish}"/>
+                            </tr> 
                         </tbody>
                     </table>
                 </div>
