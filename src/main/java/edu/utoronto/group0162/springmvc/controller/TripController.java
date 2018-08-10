@@ -1,5 +1,6 @@
 package edu.utoronto.group0162.springmvc.controller;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
@@ -9,6 +10,7 @@ import config.SystemDefaultProperty;
 import edu.utoronto.group0162.core.entity.Card;
 import edu.utoronto.group0162.core.entity.Station;
 import edu.utoronto.group0162.core.entity.Trip;
+import edu.utoronto.group0162.core.entity.TripSegment;
 import edu.utoronto.group0162.core.entity.User;
 import edu.utoronto.group0162.core.service.CardService;
 import edu.utoronto.group0162.core.service.StationService;
@@ -18,8 +20,12 @@ import edu.utoronto.group0162.core.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -66,10 +72,48 @@ public class TripController {
     mav.addObject("hasUnfinishTrip", optionalTrip.isPresent());
     mav.addObject("stations", stations);
     mav.addObject("cards", cards);
+
     if (optionalTrip.isPresent()) {
-      mav.addObject("tripSegments",
-                    this.tripSegmentService.getDao().findByTrip(optionalTrip.get()));
+      final PageRequest page = PageRequest.of(1, 1);
+      page.getSortOr(Sort.by(Sort.Direction.DESC, "createdAt"));
+      final List<TripSegment> tripSegments = this.tripSegmentService.getDao()
+        .findByTrip(optionalTrip.get(), page);
+      mav.addObject("tripSegments", tripSegments);
     }
     return mav;
+  }
+
+  /**
+   * Accept user tap in request.
+   *
+   * @param stationId station to start
+   * @param session   HTTP session
+   *
+   * @return mav
+   */
+  @PostMapping("/tap-in")
+  public ModelAndView tapIn(final @RequestParam Integer stationId, final HttpSession session) {
+    final Integer uid = (Integer) session.getAttribute(SystemDefaultProperty.UID);
+    final User user = this.userService.getDao().findById(uid).get();
+    final Station start = this.stationService.getDao().findById(stationId).get();
+
+    final Optional<Trip> optionalTrip = this.tripService.getDao().findByUserAndFinish(user, false);
+    if (!optionalTrip.isPresent()) {
+      this.tripService.tapIn(user, start);
+      return new ModelAndView("redirect:/trip-plan");
+    }
+    final Trip trip = optionalTrip.get();
+    final PageRequest page = PageRequest.of(1, 1);
+    page.getSortOr(Sort.by(Sort.Direction.ASC, "createdAt"));
+    final List<TripSegment> tripSegments = this.tripSegmentService.getDao().findByTrip(trip, page);
+
+    final TripSegment tripSegment = tripSegments.get(0);
+    if (Instant.now().getEpochSecond() - tripSegment.getCreatedAt()
+        > SystemDefaultProperty.DURATION) {
+      this.tripService.tapIn(user, start);
+    } else {
+      this.tripService.tapIn(trip, start);
+    }
+    return new ModelAndView("redirect:/trip-plan");
   }
 }
