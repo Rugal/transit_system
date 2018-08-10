@@ -78,6 +78,7 @@ CREATE TABLE trip_segment (
     uid integer REFERENCES "user" (uid),
     "start" integer REFERENCES station (sid),
     "stop" integer REFERENCES station (sid),
+    fare double precision,
     modified_at bigint,
     created_at bigint
 );

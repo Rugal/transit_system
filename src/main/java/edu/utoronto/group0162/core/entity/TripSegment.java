@@ -58,6 +58,8 @@ public class TripSegment {
   @ManyToOne(cascade = CascadeType.PERSIST)
   private Station stop;
 
+  private Double fare;
+
   @Column(name = "created_at")
   private Long createdAt;
 
