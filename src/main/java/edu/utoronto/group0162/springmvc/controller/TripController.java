@@ -103,17 +103,35 @@ public class TripController {
       return new ModelAndView("redirect:/trip-plan");
     }
     final Trip trip = optionalTrip.get();
-    final PageRequest page = PageRequest.of(1, 1);
-    page.getSortOr(Sort.by(Sort.Direction.ASC, "createdAt"));
-    final List<TripSegment> tripSegments = this.tripSegmentService.getDao().findByTrip(trip, page);
-
-    final TripSegment tripSegment = tripSegments.get(0);
-    if (Instant.now().getEpochSecond() - tripSegment.getCreatedAt()
-        > SystemDefaultProperty.DURATION) {
+    if (Instant.now().getEpochSecond() - trip.getCreatedAt() > SystemDefaultProperty.DURATION) {
+      trip.setFinish(true);
+      this.tripService.getDao().save(trip);
       this.tripService.tapIn(user, start);
     } else {
       this.tripService.tapIn(trip, start);
     }
-    return new ModelAndView("redirect:/trip-plan");
+    return new ModelAndView("redirect:/");
+  }
+
+  /**
+   * Accept tap out request.
+   *
+   * @param stationId station to start
+   * @param session   HTTP session
+   *
+   * @return mav
+   */
+  @PostMapping("/tap-out")
+  public ModelAndView tapOut(final @RequestParam Integer stationId, final HttpSession session) {
+    final Integer uid = (Integer) session.getAttribute(SystemDefaultProperty.UID);
+    final User user = this.userService.getDao().findById(uid).get();
+    final Station stop = this.stationService.getDao().findById(stationId).get();
+
+    final Optional<Trip> optionalTrip = this.tripService.getDao().findByUserAndFinish(user, false);
+    if (!optionalTrip.isPresent()) {
+      return new ModelAndView("error", "error", "User not found");
+    }
+    this.tripService.tapOut(optionalTrip.get(), stop);
+    return new ModelAndView("redirect:/");
   }
 }

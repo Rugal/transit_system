@@ -26,4 +26,14 @@ public interface TripService extends ServiceBase<TripDao> {
    * @return the original trip object
    */
   Trip tapIn(Trip trip, Station start);
+
+  /**
+   * Tap out in a station.
+   *
+   * @param trip original trip
+   * @param stop stop station
+   *
+   * @return original trip
+   */
+  Trip tapOut(Trip trip, Station stop);
 }

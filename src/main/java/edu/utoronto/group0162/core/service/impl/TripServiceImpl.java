@@ -1,5 +1,10 @@
 package edu.utoronto.group0162.core.service.impl;
 
+import java.time.Instant;
+import java.util.Optional;
+
+import config.SystemDefaultProperty;
+
 import edu.utoronto.group0162.core.dao.TripDao;
 import edu.utoronto.group0162.core.entity.Station;
 import edu.utoronto.group0162.core.entity.Trip;
@@ -50,6 +55,27 @@ public class TripServiceImpl implements TripService {
     tripSegment.setUser(trip.getUser());
     tripSegment.setTrip(trip);
     this.tripSegmentService.getDao().save(tripSegment);
+    return trip;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Trip tapOut(final Trip trip, final Station stop) {
+    final Optional<TripSegment> optionalTripSegment = this.tripSegmentService.getDao()
+      .findByTripAndStopIsNull(trip);
+    if (!optionalTripSegment.isPresent()) {
+      return null;
+    }
+    final TripSegment tripSegment = optionalTripSegment.get();
+    tripSegment.setStop(stop);
+    this.tripSegmentService.getDao().save(tripSegment);
+
+    if (Instant.now().getEpochSecond() - trip.getCreatedAt() > SystemDefaultProperty.DURATION) {
+      trip.setFinish(true);
+      this.dao.save(trip);
+    }
     return trip;
   }
 }
